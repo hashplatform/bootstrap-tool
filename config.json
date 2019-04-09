@@ -1,4 +1,4 @@
 {
   "coin": "your_coin_name",
-  "directory": "blockchain_directory"
+  "directory": "/home/jack/Go/src/github.com/jackkdev/bootstrap-tool/dir"
 }

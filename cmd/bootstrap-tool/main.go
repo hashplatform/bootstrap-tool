@@ -1,6 +1,7 @@
 package main
 
 import (
+	"archive/zip"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -26,9 +27,69 @@ func LoadConfigFile(file string) Config {
 		fmt.Println(err.Error())
 	}
 
-	jsonParser := json.NewDecoder(configurationFile)
-	jsonParser.Decode(&config)
+	json.NewDecoder(configurationFile).Decode(&config)
+
 	return config
+}
+
+func ZipWriter(coin Config) {
+
+	directory := coin.Directory
+
+	// Create a buffer
+	outputFile, err := os.Create(directory)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	defer outputFile.Close()
+
+	// Create archive
+	w := zip.NewWriter(outputFile)
+
+	//add files
+	addFiles(w, directory, "")
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	// Close file
+	err = w.Close()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+}
+
+func addFiles(w *zip.Writer, basePath, baseInZip string) {
+	files, err := ioutil.ReadDir(basePath)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	for _, file := range files {
+		fmt.Println(basePath + file.Name())
+		if !file.IsDir() {
+			dat, err := ioutil.ReadFile(basePath + file.Name())
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+
+			f, err := w.Create(baseInZip + file.Name())
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+			_, err = f.Write(dat)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+		} else if file.IsDir() {
+			newBase := basePath + file.Name() + "/"
+			fmt.Println("Recursing and Adding SubDir: " + file.Name())
+			fmt.Println("Recursing and Adding SubDir: " + newBase)
+
+			addFiles(w, newBase, file.Name() + "/")
+		}
+	}
 }
 
 func ListFiles(config Config) {
@@ -52,5 +113,5 @@ func ListFiles(config Config) {
 
 func main() {
 	config := LoadConfigFile("config.json")
-	ListFiles(config)
+	ZipWriter(config)
 }
