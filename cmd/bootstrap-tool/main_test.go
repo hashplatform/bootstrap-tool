@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"os"
+	"testing"
+)
 
 func TestLoadConfigFile(t *testing.T) {
 	config := struct {
@@ -21,5 +24,13 @@ func TestLoadConfigFile(t *testing.T) {
 	}
 	if config.Destination == "" {
 		t.Errorf("Directory parameter is empty, got: %s, want: %s", config.Destination, "../../testingArchives")
+	}
+}
+
+func TestListFiles(t *testing.T) {
+	if _, err := os.Stat("../../testData"); err != nil {
+		if os.IsNotExist(err) {
+			t.Errorf("Directory does not exist")
+		}
 	}
 }
