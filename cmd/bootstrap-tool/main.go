@@ -4,6 +4,8 @@ import (
 	"archive/zip"
 	"encoding/json"
 	"fmt"
+	"io"
+	"path/filepath"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -15,6 +17,7 @@ var currentDate = time.Now().Format(time.RFC3339)
 type Config struct {
 	Coin string `json:"coin"`
 	Directory string `json:"directory"`
+	Destination string `json:"destination"`
 }
 
 func LoadConfigFile(file string) Config {
@@ -32,73 +35,16 @@ func LoadConfigFile(file string) Config {
 	return config
 }
 
-func ZipWriter(coin Config) {
-
-	directory := coin.Directory
-
-	// Create a buffer
-	outputFile, err := os.Create(directory)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	defer outputFile.Close()
-
-	// Create archive
-	w := zip.NewWriter(outputFile)
-
-	//add files
-	addFiles(w, directory, "")
-
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	// Close file
-	err = w.Close()
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-}
-
-func addFiles(w *zip.Writer, basePath, baseInZip string) {
-	files, err := ioutil.ReadDir(basePath)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	for _, file := range files {
-		fmt.Println(basePath + file.Name())
-		if !file.IsDir() {
-			dat, err := ioutil.ReadFile(basePath + file.Name())
-			if err != nil {
-				fmt.Println(err.Error())
-			}
-
-			f, err := w.Create(baseInZip + file.Name())
-			if err != nil {
-				fmt.Println(err.Error())
-			}
-			_, err = f.Write(dat)
-			if err != nil {
-				fmt.Println(err.Error())
-			}
-		} else if file.IsDir() {
-			newBase := basePath + file.Name() + "/"
-			fmt.Println("Recursing and Adding SubDir: " + file.Name())
-			fmt.Println("Recursing and Adding SubDir: " + newBase)
-
-			addFiles(w, newBase, file.Name() + "/")
-		}
-	}
-}
-
-func ListFiles(config Config) {
+func ListFiles(config Config) (name string) {
 
 	coin := config.Coin
+
+	bootstrapName := strings.ToLower(coin) + "-" + currentDate
+
 	fmt.Println("=========================")
 	fmt.Println("Coin Name:", coin)
 	fmt.Println("Blockchain Bootstrap Date:", currentDate)
-	fmt.Println("Bootstrap Name:", strings.ToLower(coin) + "-" + currentDate)
+	fmt.Println("Bootstrap Name:", bootstrapName)
 	fmt.Println("=========================")
 
 	files, err := ioutil.ReadDir(config.Directory)
@@ -109,9 +55,60 @@ func ListFiles(config Config) {
 	for _, file := range files {
 		fmt.Println(file.Name())
 	}
+
+	return bootstrapName
+}
+
+func Zip(pathToZip, destinationPath string) error {
+
+	destinationFile, err := os.Create(destinationPath)
+
+	if err != nil {
+		return err
+	}
+
+	myZip := zip.NewWriter(destinationFile)
+	err = filepath.Walk(pathToZip, func(filePath string, info os.FileInfo, err error) error {
+		if info.IsDir() {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+
+		relPath := strings.TrimPrefix(filePath, filepath.Dir(pathToZip))
+		zipFile, err := myZip.Create(relPath)
+		if err != nil {
+			return err
+		}
+		fsFile, err := os.Open(filePath)
+		if err != nil {
+			return err
+		}
+		_, err = io.Copy(zipFile, fsFile)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+	err = myZip.Close()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func main() {
 	config := LoadConfigFile("config.json")
-	ZipWriter(config)
+
+	bootstrapName := strings.ToLower(config.Coin) + "-" + currentDate
+
+	destination := config.Destination + bootstrapName
+
+	ListFiles(config)
+	Zip(config.Directory, destination)
 }
