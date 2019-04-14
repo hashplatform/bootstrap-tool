@@ -112,7 +112,7 @@ func CreateBootstrap(pathToZip, destinationPath string) error {
 }
 
 func main() {
-	config := LoadConfigFile("config.json")
+	config := LoadConfigFile("./config.json")
 	bootstrapName := ListFiles(config)
 	destination := config.Destination + bootstrapName
 

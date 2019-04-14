@@ -1,5 +1,5 @@
 {
-  "coin": "coin-name",
-  "directory": "bootstrap-directory",
-  "destination": "bootstrap-archive-destination"
+  "coin": "bitcoin",
+  "directory": "./testData",
+  "destination": "./testingArchives/"
 }
