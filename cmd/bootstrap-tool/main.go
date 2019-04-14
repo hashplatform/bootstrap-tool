@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"path/filepath"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -15,11 +15,12 @@ import (
 var currentDate = time.Now().Format(time.RFC3339)
 
 type Config struct {
-	Coin string `json:"coin"`
-	Directory string `json:"directory"`
+	Coin        string `json:"coin"`
+	Directory   string `json:"directory"`
 	Destination string `json:"destination"`
 }
 
+// Populate a struct with the config file
 func LoadConfigFile(file string) Config {
 	var config Config
 	configurationFile, err := os.Open(file)
@@ -35,11 +36,12 @@ func LoadConfigFile(file string) Config {
 	return config
 }
 
-func ListFiles(config Config) (name string) {
+// Output a list of files in the bootstrap directory and generate a bootstrap file name
+func ListFiles(config Config) (bootstrapName string) {
 
 	coin := config.Coin
 
-	bootstrapName := strings.ToLower(coin) + "-" + currentDate
+	bootstrapName = strings.ToLower(coin) + "-" + currentDate
 
 	fmt.Println("=========================")
 	fmt.Println("Coin Name:", coin)
@@ -59,6 +61,7 @@ func ListFiles(config Config) (name string) {
 	return bootstrapName
 }
 
+// Create a zip archive containing the bootstrap files
 func CreateBootstrap(pathToZip, destinationPath string) error {
 
 	destinationFile, err := os.Create(destinationPath)
@@ -68,6 +71,7 @@ func CreateBootstrap(pathToZip, destinationPath string) error {
 	}
 
 	myZip := zip.NewWriter(destinationFile)
+
 	err = filepath.Walk(pathToZip, func(filePath string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
@@ -81,34 +85,36 @@ func CreateBootstrap(pathToZip, destinationPath string) error {
 		if err != nil {
 			return err
 		}
+
 		fsFile, err := os.Open(filePath)
 		if err != nil {
 			return err
 		}
+
 		_, err = io.Copy(zipFile, fsFile)
 		if err != nil {
 			return err
 		}
+
 		return nil
 	})
 
 	if err != nil {
 		return err
 	}
+
 	err = myZip.Close()
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func main() {
 	config := LoadConfigFile("config.json")
-
-	bootstrapName := strings.ToLower(config.Coin) + "-" + currentDate
-
+	bootstrapName := ListFiles(config)
 	destination := config.Destination + bootstrapName
 
-	ListFiles(config)
 	CreateBootstrap(config.Directory, destination)
 }
