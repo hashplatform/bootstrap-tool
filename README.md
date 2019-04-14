@@ -1,5 +1,9 @@
 # Blockchain Bootstrap Tool
 
+[![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+[![Travis](https://img.shields.io/travis/jackkdev/bootstrap-tool.svg?style=flat-square)](https://travis-ci.org/jackkdev/bootstrap-tool)
+[![Go Report Card](https://goreportcard.com/badge/github.com/jackkdev/bootstrap-tool?style=flat-square)](https://goreportcard.com/report/github.com/jackkdev/bootstrap-tool)
+
 A Go written bootstrapping tool in order to speed up the process and deployment of blockchain bootstraps.
 
 ### Features
