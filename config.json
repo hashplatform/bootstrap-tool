@@ -1,5 +1,5 @@
 {
-  "coin": "feirm",
-  "directory": "/home/jack/Go/src/github.com/jackkdev/bootstrap-tool/dir",
-  "destination": "/home/jack/Desktop/"
+  "coin": "coin-name",
+  "directory": "bootstrap-directory",
+  "destination": "bootstrap-archive-destination"
 }

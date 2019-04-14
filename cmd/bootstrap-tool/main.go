@@ -59,7 +59,7 @@ func ListFiles(config Config) (name string) {
 	return bootstrapName
 }
 
-func Zip(pathToZip, destinationPath string) error {
+func CreateBootstrap(pathToZip, destinationPath string) error {
 
 	destinationFile, err := os.Create(destinationPath)
 
@@ -110,5 +110,5 @@ func main() {
 	destination := config.Destination + bootstrapName
 
 	ListFiles(config)
-	Zip(config.Directory, destination)
+	CreateBootstrap(config.Directory, destination)
 }
