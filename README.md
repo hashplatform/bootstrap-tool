@@ -18,3 +18,20 @@ git clone https://github.com/jackkdev/bootstrap-tool.git
 cd bootstrap-tool
 dep ensure
 ```
+
+### Usage
+* Fill out the configuration file located at the base of the repository (`config.json`)
+```json
+{
+  "coin": "coin-name",
+  "directory": "bootstrap-directory",
+  "destination": "bootstrap-archive-destination"
+}
+```
+
+* Start a bootstrap by running
+```go
+go run cmd/bootstrap-tool/main.go
+```
+
+Once its finished, check your destination path for an archived bootstrap.
