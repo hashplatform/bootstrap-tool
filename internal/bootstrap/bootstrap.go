@@ -1,18 +1,27 @@
 package bootstrap
 
 import (
-	"log"
+	"archive/zip"
+	"io"
 	"os"
-	"path/filepath"
 )
 
-func ListBootstrapFiles(files *[]string) filepath.WalkFunc {
-	return func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			log.Fatal("An error occurred:", err)
-		}
-
-		*files = append(*files, path)
-		return nil
+func AppendFiles(filename string, zipw *zip.Writer) error {
+	file, err := os.Open(filename)
+	if err != nil {
+		return err
 	}
+
+	defer file.Close()
+
+	wr, err := zipw.Create(filename)
+	if err != nil {
+		return err
+	}
+
+	if _, err := io.Copy(wr, file); err != nil {
+		return err
+	}
+
+	return nil
 }

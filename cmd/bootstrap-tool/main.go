@@ -2,12 +2,12 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"github.com/jackkdev/bootstrap-tool/internal/bootstrap"
+	"io/ioutil"
+
+	//"github.com/jackkdev/bootstrap-tool/internal/bootstrap"
 	"github.com/jackkdev/bootstrap-tool/internal/config"
 	"github.com/jackkdev/bootstrap-tool/internal/preamble"
 	"log"
-	"path/filepath"
 	"time"
 )
 
@@ -21,7 +21,8 @@ var currentDate = time.Now().Format(time.RFC3339)
 func main() {
 
 	preamble.Preamble(version)
-	//time.Sleep(10 * time.Second)
+
+	time.Sleep(2 * time.Second)
 
 	var bootstrapConfig string
 
@@ -39,18 +40,23 @@ func main() {
 		}
 
 		log.Println("Loaded configuration file successfully!")
-		log.Println("Generating bootstrap for", coin, "at the directory:", directory)
-		fmt.Println("")
 
-		var files []string
-
-		err = filepath.Walk(directory, bootstrap.ListBootstrapFiles(&files))
+		// load files from directory and append to list
+		files, err := ioutil.ReadDir(directory)
 		if err != nil {
-			log.Fatal("An error occurred:", err)
+			log.Fatal("An error occurred reading from the directory:", err)
 		}
+
+		var fileList []string
 
 		for _, file := range files {
-			fmt.Println(file)
+			fileList = append(fileList, file.Name())
 		}
+
+		log.Println(fileList)
+
+		log.Println("Generating bootstrap for", coin, "at the directory:", directory)
+	} else {
+		log.Fatal(`No configuration file was provided. Please restart the application and specify the configuration file with -config="config.json"`)
 	}
 }
