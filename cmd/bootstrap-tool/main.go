@@ -4,7 +4,7 @@ import (
 	"flag"
 	"io/ioutil"
 
-	//"github.com/jackkdev/bootstrap-tool/internal/bootstrap"
+	"github.com/jackkdev/bootstrap-tool/internal/bootstrap"
 	"github.com/jackkdev/bootstrap-tool/internal/config"
 	"github.com/jackkdev/bootstrap-tool/internal/preamble"
 	"log"
@@ -39,6 +39,8 @@ func main() {
 			directory = bootstrapConfigInfo.Directory
 		}
 
+		name := coin + currentDate
+
 		log.Println("Loaded configuration file successfully!")
 
 		// load files from directory and append to list
@@ -51,11 +53,21 @@ func main() {
 
 		for _, file := range files {
 			fileList = append(fileList, file.Name())
+
+			// remove wallet.dat
+			if bootstrap.CheckFileSlice("wallet.dat", fileList) {
+				fileList = fileList[:len(fileList)-1]
+			}
 		}
 
-		log.Println(fileList)
+		log.Println("Fetching blockchain files for", coin, "located at the directory:", directory)
+		log.Println("Bootstrap Name:", name)
 
-		log.Println("Generating bootstrap for", coin, "at the directory:", directory)
+		// start bootstrapping process
+		if err = bootstrap.ZipBlockchain(name, fileList); err != nil {
+			log.Fatal(err)
+		}
+
 	} else {
 		log.Fatal(`No configuration file was provided. Please restart the application and specify the configuration file with -config="config.json"`)
 	}
