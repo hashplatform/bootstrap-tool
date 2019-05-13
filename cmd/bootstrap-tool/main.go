@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-var version = "1.0.0"
+var version = "1.0.1"
 
 var coin string
 var directory string
@@ -39,7 +39,7 @@ func main() {
 			directory = bootstrapConfigInfo.Directory
 		}
 
-		name := coin + currentDate + ".zip"
+		name := coin + "-" + currentDate + ".zip"
 
 		log.Println("Loaded configuration file successfully!")
 
@@ -76,16 +76,18 @@ func main() {
 		}
 
 		log.Println("Fetching blockchain files for", coin, "located at the directory:", directory)
-		log.Println("Bootstrap Name:", name)
+		log.Println("Creating bootstrap, please sit tight. The bootstrap name is:", name)
 
 		// start bootstrapping process
 		if err = bootstrap.ZipBlockchain(name, fileList); err != nil {
 			log.Fatal(err)
 		} else if err == nil {
-			log.Println("Bootstrapping complete. It can be found in this application directory.")
+			log.Println("Bootstrapping complete. It can be found in your current directory.")
 		}
 
 	} else {
 		log.Fatal(`No configuration file was provided. Please restart the application and specify the configuration file with -config="config.json"`)
 	}
+
+	log.Println("Thank you for using the Blockchain Bootstrapper :)")
 }
