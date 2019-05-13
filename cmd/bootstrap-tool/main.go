@@ -39,7 +39,7 @@ func main() {
 			directory = bootstrapConfigInfo.Directory
 		}
 
-		name := coin + currentDate
+		name := coin + currentDate + ".zip"
 
 		log.Println("Loaded configuration file successfully!")
 
@@ -52,10 +52,10 @@ func main() {
 		var fileList []string
 
 		for _, file := range files {
-			fileList = append(fileList, file.Name())
+			fileList = append(fileList, directory+file.Name())
 
 			// remove wallet.dat
-			if bootstrap.CheckFileSlice("wallet.dat", fileList) {
+			if bootstrap.CheckFileSlice(directory+"wallet.dat", fileList) {
 				fileList = fileList[:len(fileList)-1]
 			}
 		}
@@ -66,6 +66,8 @@ func main() {
 		// start bootstrapping process
 		if err = bootstrap.ZipBlockchain(name, fileList); err != nil {
 			log.Fatal(err)
+		} else if err == nil {
+			log.Println("Bootstrapping complete. It can be found in this application directory.")
 		}
 
 	} else {
