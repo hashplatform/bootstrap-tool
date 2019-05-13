@@ -1,5 +1,0 @@
-{
-  "coin": "bitcoin",
-  "directory": "testData/",
-  "destination": "./testingArchives/"
-}

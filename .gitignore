@@ -2,3 +2,5 @@
 vendor/*
 testingArchives/*
 builds/*
+*.zip
+config.json

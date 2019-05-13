@@ -58,6 +58,21 @@ func main() {
 			if bootstrap.CheckFileSlice(directory+"wallet.dat", fileList) {
 				fileList = fileList[:len(fileList)-1]
 			}
+			if bootstrap.CheckFileSlice(directory+"backups", fileList) {
+				fileList = fileList[:len(fileList)-1]
+			}
+			if bootstrap.CheckFileSlice(directory+"debug.log", fileList) {
+				fileList = fileList[:len(fileList)-1]
+			}
+			if bootstrap.CheckFileSlice(directory+"masternode.conf", fileList) {
+				fileList = fileList[:len(fileList)-1]
+			}
+			if bootstrap.CheckFileSlice(directory+"feirm.conf", fileList) {
+				fileList = fileList[:len(fileList)-1]
+			}
+			if bootstrap.CheckFileSlice(directory+"db.log", fileList) {
+				fileList = fileList[:len(fileList)-1]
+			}
 		}
 
 		log.Println("Fetching blockchain files for", coin, "located at the directory:", directory)
