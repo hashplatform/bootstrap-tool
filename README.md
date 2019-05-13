@@ -38,4 +38,9 @@ dep ensure
 go run cmd/bootstrap-tool/main.go
 ```
 
+### Docker Builds
+```
+docker run --rm -it -v "$PWD":/go/src/bootstrap-tool -w /go/src/bootstrap-tool golang:1.12.4 ./build.sh 
+```
+
 Once its finished, check your destination path for an archived bootstrap.
