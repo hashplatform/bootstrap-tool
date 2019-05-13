@@ -2,24 +2,50 @@
 
 
 [[projects]]
+  name = "github.com/dsnet/compress"
+  packages = [".","bzip2","bzip2/internal/sais","internal","internal/errors","internal/prefix"]
+  revision = "da652975a8eea9fa0735aba8056747a751db0bd3"
+  version = "v0.0.1"
+
+[[projects]]
+  name = "github.com/golang/snappy"
+  packages = ["."]
+  revision = "2a8bb927dd31d8daada140a5d09578521ce5c36a"
+  version = "v0.0.1"
+
+[[projects]]
+  name = "github.com/mholt/archiver"
+  packages = ["."]
+  revision = "d572b2e8b82726cee9476d1b9d63a7fe9b601ff1"
+  version = "v3.1.1"
+
+[[projects]]
+  name = "github.com/nwaples/rardecode"
+  packages = ["."]
+  revision = "cc3e4b2381762c56dbcdf9f93be03349a1dc1c14"
+  version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/pierrec/lz4"
+  packages = [".","internal/xxh32"]
+  revision = "d705d4371bfccdf47f10e45584e896026c83616f"
+  version = "v2.2.3"
+
+[[projects]]
+  name = "github.com/ulikunitz/xz"
+  packages = [".","internal/hash","internal/xlog","lzma"]
+  revision = "6f934d456d51e742b4eeab20d925a827ef22320a"
+  version = "v0.5.6"
+
+[[projects]]
   branch = "master"
-  digest = "1:813b67663fc547b0b8b9f95ad73f93eae83e76cac4fc9edc18192d68c1187251"
-  name = "github.com/jackkdev/bootstrap-tool"
-  packages = [
-    "internal/bootstrap",
-    "internal/config",
-    "internal/preamble",
-  ]
-  pruneopts = ""
-  revision = "96003c0f856542238c895789785610da2bbad761"
+  name = "github.com/xi2/xz"
+  packages = ["."]
+  revision = "48954b6210f8d154cb5f8484d3a3e1f83489309e"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  input-imports = [
-    "github.com/jackkdev/bootstrap-tool/internal/bootstrap",
-    "github.com/jackkdev/bootstrap-tool/internal/config",
-    "github.com/jackkdev/bootstrap-tool/internal/preamble",
-  ]
+  inputs-digest = "4b928a08aaa635ebe83c2a263b9f082514da64c8fdf007bb37c4bc87bca5a752"
   solver-name = "gps-cdcl"
   solver-version = 1
