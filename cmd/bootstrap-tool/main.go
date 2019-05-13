@@ -67,7 +67,7 @@ func main() {
 			if bootstrap.CheckFileSlice(directory+"masternode.conf", fileList) {
 				fileList = fileList[:len(fileList)-1]
 			}
-			if bootstrap.CheckFileSlice(directory+"feirm.conf", fileList) {
+			if bootstrap.CheckFileSlice(directory+coin+".conf", fileList) {
 				fileList = fileList[:len(fileList)-1]
 			}
 			if bootstrap.CheckFileSlice(directory+"db.log", fileList) {
