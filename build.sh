@@ -23,11 +23,15 @@ do
     fi
 
     env GOOS=$GOOS GOARCH=$GOARCH GOARM=7 go build -o $output_name .
+
+    sha256sum $output_name >> SHA256SUMS
+
     if [ $? -ne 0 ]; then
         echo 'An error has occurred! Aborting the script execution...'
         exit 1
     fi
 
-    sha256sum $output_name >> SHA256SUMS
-    mv $output_name SHA256SUMS ../../builds
+    mv $output_name ../../builds
 done
+
+mv SHA256SUMS ../../builds
