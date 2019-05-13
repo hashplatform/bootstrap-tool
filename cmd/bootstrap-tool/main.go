@@ -1,56 +1,76 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
+	"flag"
 	"io/ioutil"
-	"os"
-	"strings"
+
+	"github.com/jackkdev/bootstrap-tool/internal/bootstrap"
+	"github.com/jackkdev/bootstrap-tool/internal/config"
+	"github.com/jackkdev/bootstrap-tool/internal/preamble"
+	"log"
 	"time"
 )
 
+var version = "1.0.0"
+
+var coin string
+var directory string
+
 var currentDate = time.Now().Format(time.RFC3339)
 
-type Config struct {
-	Coin string `json:"coin"`
-	Directory string `json:"directory"`
-}
-
-func LoadConfigFile(file string) Config {
-	var config Config
-	configurationFile, err := os.Open(file)
-
-	defer configurationFile.Close()
-
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	jsonParser := json.NewDecoder(configurationFile)
-	jsonParser.Decode(&config)
-	return config
-}
-
-func ListFiles(config Config) {
-
-	coin := config.Coin
-	fmt.Println("=========================")
-	fmt.Println("Coin Name:", coin)
-	fmt.Println("Blockchain Bootstrap Date:", currentDate)
-	fmt.Println("Bootstrap Name:", strings.ToLower(coin) + "-" + currentDate)
-	fmt.Println("=========================")
-
-	files, err := ioutil.ReadDir(config.Directory)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	for _, file := range files {
-		fmt.Println(file.Name())
-	}
-}
-
 func main() {
-	config := LoadConfigFile("config.json")
-	ListFiles(config)
+
+	preamble.Preamble(version)
+
+	time.Sleep(2 * time.Second)
+
+	var bootstrapConfig string
+
+	flag.StringVar(&bootstrapConfig, "config", "", "Directory of your configuration file")
+	flag.Parse()
+
+	if bootstrapConfig != "" {
+		bootstrapConfigInfo, err := config.LoadConfig(bootstrapConfig)
+		if err != nil {
+			log.Println("Error reading config file from:", bootstrapConfig)
+			return
+		} else {
+			coin = bootstrapConfigInfo.Coin
+			directory = bootstrapConfigInfo.Directory
+		}
+
+		name := coin + currentDate + ".zip"
+
+		log.Println("Loaded configuration file successfully!")
+
+		// load files from directory and append to list
+		files, err := ioutil.ReadDir(directory)
+		if err != nil {
+			log.Fatal("An error occurred reading from the directory:", err)
+		}
+
+		var fileList []string
+
+		for _, file := range files {
+			fileList = append(fileList, directory+file.Name())
+
+			// remove wallet.dat
+			if bootstrap.CheckFileSlice(directory+"wallet.dat", fileList) {
+				fileList = fileList[:len(fileList)-1]
+			}
+		}
+
+		log.Println("Fetching blockchain files for", coin, "located at the directory:", directory)
+		log.Println("Bootstrap Name:", name)
+
+		// start bootstrapping process
+		if err = bootstrap.ZipBlockchain(name, fileList); err != nil {
+			log.Fatal(err)
+		} else if err == nil {
+			log.Println("Bootstrapping complete. It can be found in this application directory.")
+		}
+
+	} else {
+		log.Fatal(`No configuration file was provided. Please restart the application and specify the configuration file with -config="config.json"`)
+	}
 }
