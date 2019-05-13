@@ -28,14 +28,13 @@ dep ensure
 ```json
 {
   "coin": "coin-name",
-  "directory": "bootstrap-directory",
-  "destination": "bootstrap-archive-destination"
+  "directory": "bootstrap-directory"
 }
 ```
 
 * Start a bootstrap by running
 ```go
-go run cmd/bootstrap-tool/main.go
+./bootstrap-tool -config="config.json"
 ```
 
 ### Docker Builds
