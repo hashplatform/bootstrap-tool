@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+mkdir -p 'builds'
+
 cd 'cmd/bootstrap-tool'
 
 go get -d -v ./...
@@ -25,4 +27,7 @@ do
         echo 'An error has occurred! Aborting the script execution...'
         exit 1
     fi
+
+    sha256sum $output_name >> SHA256SUMS
+    mv $output_name SHA256SUMS ../../builds
 done
