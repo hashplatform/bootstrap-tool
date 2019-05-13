@@ -4,9 +4,9 @@ import (
 	"flag"
 	"io/ioutil"
 
-	"github.com/jackkdev/bootstrap-tool/internal/bootstrap"
-	"github.com/jackkdev/bootstrap-tool/internal/config"
-	"github.com/jackkdev/bootstrap-tool/internal/preamble"
+	"github.com/jackkdev/bootstrap-tool/pkg/bootstrap"
+	"github.com/jackkdev/bootstrap-tool/pkg/config"
+	"github.com/jackkdev/bootstrap-tool/pkg/preamble"
 	"log"
 	"time"
 )

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-mkdir builds
+cd 'cmd/bootstrap-tool'
 
 go get -d -v ./...
 go install -v ./...
 
-package_name=bootstrapper
+package_name=bootstrap-tool
 
 platforms=("windows/amd64" "linux/amd64" "darwin/amd64" "linux/arm" )
 
@@ -20,11 +20,9 @@ do
         output_name+='.exe'
     fi
 
-    env GOOS=$GOOS GOARCH=$GOARCH GOARM=7 go build -o $output_name $package
+    env GOOS=$GOOS GOARCH=$GOARCH GOARM=7 go build -o $output_name .
     if [ $? -ne 0 ]; then
         echo 'An error has occurred! Aborting the script execution...'
         exit 1
     fi
-
-    mv bootstrapper* builds/
 done
