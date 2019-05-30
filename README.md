@@ -31,6 +31,13 @@ dep ensure
   "directory": "bootstrap-directory"
 }
 ```
+Example
+```json
+{
+  "coin": "bitcoin",
+  "directory": "/home/user/.bitcoin"
+}
+```
 
 * Start a bootstrap by running
 ```go
